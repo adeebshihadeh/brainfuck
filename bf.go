@@ -1,6 +1,7 @@
 package main
 
 import(
+  "os"
   "fmt"
   "strings"
   "io/ioutil"
@@ -11,8 +12,7 @@ func main() {
   var memory [1000]uint32
   var ptr uint8
 
-  // TODO: read file from arg
-  prog, _ := ioutil.ReadFile("test/hello_world.b")
+  prog, _ := ioutil.ReadFile(os.Args[1])
 
   pos := 0
   for pos < len(prog) {
