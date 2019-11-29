@@ -3,23 +3,21 @@ package main
 import(
   "os"
   "fmt"
-  "strings"
   "io/ioutil"
 )
 
 func main() {
-  // TODO: max amount of memory cells?
-  var memory [1000]uint32
+  var memory [30000]int8
   var ptr uint8
 
   prog, _ := ioutil.ReadFile(os.Args[1])
 
-  pos := 0
-  for pos < len(prog) {
-    b := prog[pos]
-    pos += 1
+  pc := 0
+  for pc < len(prog) {
+    c := prog[pc]
+    pc++
 
-    switch b {
+    switch c {
     case '>':
       ptr += 1
     case '<':
@@ -30,14 +28,40 @@ func main() {
       memory[ptr] -= 1
     case '[':
       if memory[ptr] == 0 {
-        pos = strings.IndexByte(string(prog[pos:]), ']') + 1
+        cnt := 0
+        for pc < len(prog) {
+          if prog[pc] == ']' {
+            if cnt == 0 {
+              pc++
+              break
+            }
+            cnt--
+          } else if prog[pc] == '[' {
+            cnt++
+          }
+          pc++
+        }
       }
     case ']':
       if memory[ptr] != 0 {
-        pos = strings.LastIndexByte(string(prog[:pos]), '[') + 1
+        cnt := 0
+        pc -= 2 // jump back
+        for pc > 0 {
+          if prog[pc] == '[' {
+            if cnt == 0 {
+              break
+            }
+            cnt -= 1
+          } else if prog[pc] == ']' {
+            cnt++
+          }
+          pc--
+        }
       }
     case '.':
       fmt.Print(string(memory[ptr]))
+    case ',':
+      fmt.Println("TODO: implement input")
     }
   }
   fmt.Println()
