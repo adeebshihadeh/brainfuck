@@ -7,7 +7,7 @@ import(
 )
 
 func main() {
-  var memory [30000]int8
+  var mem [30000]int8
   var ptr uint8
 
   prog, _ := ioutil.ReadFile(os.Args[1])
@@ -23,11 +23,11 @@ func main() {
     case '<':
       ptr -= 1
     case '+':
-      memory[ptr] += 1
+      mem[ptr] += 1
     case '-':
-      memory[ptr] -= 1
+      mem[ptr] -= 1
     case '[':
-      if memory[ptr] == 0 {
+      if mem[ptr] == 0 {
         cnt := 0
         for pc < len(prog) {
           if prog[pc] == ']' {
@@ -43,9 +43,9 @@ func main() {
         }
       }
     case ']':
-      if memory[ptr] != 0 {
+      if mem[ptr] != 0 {
         cnt := 0
-        pc -= 2 // jump back
+        pc -= 2
         for pc > 0 {
           if prog[pc] == '[' {
             if cnt == 0 {
@@ -59,7 +59,7 @@ func main() {
         }
       }
     case '.':
-      fmt.Print(string(memory[ptr]))
+      fmt.Print(string(mem[ptr]))
     case ',':
       fmt.Println("TODO: implement input")
     }
